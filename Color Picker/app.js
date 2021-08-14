@@ -10,6 +10,8 @@ const lockButton = document.querySelectorAll('.lock');
 let initialColors;
 
 
+let savedPalettes = [];
+
 sliders.forEach(slider =>{
     slider.addEventListener("input", hslControls);
 })
@@ -183,6 +185,28 @@ function lockLayer(e,index){
     }else{
         e.target.innerHTML = `<i class="fas fa-lock-open"></i>`;
     }
+}
+
+const saveBtn = document.querySelector('.save');
+const submitSave = document.querySelector('.submit-save');
+const closeSave = document.querySelector('.close-save');
+const saveContainer = document.querySelector('.save-container');
+const saveInput = document.querySelector('.save-container input');
+
+
+saveBtn.addEventListener('click', openPalette);
+closeSave.addEventListener('click', closePalette);
+
+function openPalette(e){
+    const popup = saveContainer.children[0];
+    saveContainer.classList.add('active');
+    popup.classList.add("active");
+}
+
+function closePalette(e){
+    const popup = saveContainer.children[0];
+    saveContainer.classList.remove('active');
+    popup.classList.remove("active");
 }
 
 randomColors();
