@@ -2,7 +2,10 @@ const colorDivs = document.querySelectorAll(".color");
 const generateBtn = document.querySelector(".generate");
 const sliders = document.querySelectorAll('input[type="range"]');
 const currentHexes = document.querySelectorAll(".color h2");
-popup = document.querySelector('.copy-container');
+const adjustButton = document.querySelectorAll('.adjust');
+const closeAdjustments = document.querySelectorAll('.close-adjustment');
+const popup = document.querySelector('.copy-container');
+const sliderContainers = document.querySelectorAll('.sliders');
 let initialColors;
 
 
@@ -26,6 +29,18 @@ popup.addEventListener('transitionend', ()=>{
     const popupBox = popup.children[0];
     popup.classList.remove('active');
     popupBox.classList.remove('active');
+})
+
+adjustButton.forEach((button,index) =>{
+    button.addEventListener('click', ()=>{
+        openAdjustmentPanel(index);
+    })
+})
+
+closeAdjustments.forEach((button, index)=>{
+    button.addEventListener('click', ()=>{
+        closeAdjustmentPanel(index);
+    })
 })
 
 function generateHex(){
@@ -80,7 +95,7 @@ function hslControls(e){
     const hue = sliders[0];
     const brightness = sliders[1];
     const saturation = sliders[2];
-    const bgColor = initialColor[index];
+    const bgColor = initialColors[index];
     let color = chroma(bgColor).set('hsl.s', saturation.value).set('hsl.l', brightness.value).set('hsl.h', hue.value);
     colorDivs[index].style.backgroundColor= color;
     colorizeSliders(color, hue, brightness, saturation);
@@ -129,6 +144,14 @@ function copyToClipboard(hex){
     const popupBox = popup.children[0];
     popup.classList.add('active');
     popupBox.classList.add('active');
+}
+
+function openAdjustmentPanel(index){
+    sliderContainers[index].classList.toggle('active');
+}
+
+function closeAdjustmentPanel(index){
+    sliderContainers[index].classList.remove('active');
 }
 
 randomColors();
