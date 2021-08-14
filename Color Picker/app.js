@@ -21,9 +21,11 @@ function generateHex(){
 }
 
 function randomColors(){
+    initialColor = [];
     colorDivs.forEach((div, index) =>{
         const hexText = div.children[0];
         const randomColors = generateHex();
+        initialColor.push(chroma(randomColors).hex());
         div.style.backgroundColor = randomColors;
         hexText.innerText = randomColors;
         checkTextContrast(randomColors, hexText);
@@ -64,7 +66,7 @@ function hslControls(e){
     const hue = sliders[0];
     const brightness = sliders[1];
     const saturation = sliders[2];
-    const bgColor = colorDivs[index].querySelector("h2").innerText;
+    const bgColor = initialColor[index];
     let color = chroma(bgColor).set('hsl.s', saturation.value).set('hsl.l', brightness.value).set('hsl.h', hue.value);
     colorDivs[index].style.backgroundColor= color;
 }
