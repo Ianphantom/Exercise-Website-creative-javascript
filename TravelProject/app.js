@@ -1,6 +1,7 @@
 let controller;
 let slideScene;
 let pageScene;
+let detailScene;
 
 function animateSlides(){
     controller = new ScrollMagic.Controller(); 
@@ -15,14 +16,14 @@ function animateSlides(){
         slideT1.fromTo(revealImg, {x: '0%'}, {x:'100%'});
         slideT1.fromTo(img, {scale:2}, {scale:1}, '-=0.5');
         slideT1.fromTo(reavealText, {x:'0%'}, {x:'100%'}, "-=0.2")
-        slideT1.fromTo(nav, {y:'-100%'}, {y:'0%'}, "-=0.5")
+        // slideT1.fromTo(nav, {y:'-100%'}, {y:'0%'}, "-=0.5")
 
         slideScene = new ScrollMagic.Scene({
             triggerElement : slide,
             triggerHook: 0.19
         })
         .setTween(slideT1)
-        .addIndicators({colorStart:'white', colorTrigger:'white', name:"slide"})
+        // .addIndicators({colorStart:'white', colorTrigger:'white', name:"slide"})
         .addTo(controller);
 
         const pageT1 = gsap.timeline();
@@ -35,7 +36,7 @@ function animateSlides(){
             duration: '100%',
             triggerHook: 0
         })
-        .addIndicators({colorStart:'white', colorTrigger:'white', name:"page", indent:200})
+        // .addIndicators({colorStart:'white', colorTrigger:'white', name:"page", indent:200})
         .setPin(slide, {pushFollowers:false})
         .setTween(pageT1)
         .addTo(controller)
@@ -104,7 +105,11 @@ barba.init({
             namespace: "fashion",
             beforeEnter(){
                 logo.href = '../index.html';
-                gsap.fromTo('.nav-header', 1, {y:'100%'}, {y:'0%', ease: "power2.inOut"})
+                detailAnimation()
+            },
+            beforeLeave(){
+                controller.destroy();
+                detailScene.destroy();
             }
         }
     ],
@@ -130,10 +135,37 @@ barba.init({
                 });
                 t1.fromTo('.swipe', 1, {x:'0%'}, {x:'100%', stagger:0.25 ,onComplete: done});
                 t1.fromTo(next.container,1,{opacity:0}, {opacity:1});
+                t1.fromTo('.nav-header', 1, {y:'-100%'}, {y:'0%', ease: "power2.inOut"}, '-=1.5')
             }
         }
     ]
 })
+
+function detailAnimation(){
+    controller = new ScrollMagic.Controller();
+    const slides = document.querySelectorAll('.detail-slide');
+    slides.forEach((slide, index,slides) =>{
+        const slidet1 = gsap.timeline({
+            default: {
+                duration :1
+            }
+        })
+        let nextSlide = slide.length - 1 === index ? "end" : slides[index+1];
+        const nextImg = nextSlide.querySelector('img');
+        slidet1.fromTo(slide, {opacity:1}, {opacity:0});
+        slidet1.fromTo(nextSlide, {opacity:0}, {opacity:1}, "-=1")
+        slidet1.fromTo(nextImg, {x:'50%'}, {x:'0%'})
+        detailScene = new ScrollMagic.Scene({
+            triggerElement: slide,
+            duration: '100%',
+            triggerHook: 0
+        })
+        .setPin(slide, {pushFollowers:false})
+        .setTween(slidet1)
+        // .addIndicators()
+        .addTo(controller);
+    })
+}
 
 burger.addEventListener('click',navToggle)
 window.addEventListener('mousemove', cursor)
